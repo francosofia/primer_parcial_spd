@@ -1,0 +1,266 @@
+// declaro las  variables globales 
+int lectura_uno;
+int lectura_dos;
+int lectura_tres;
+int auxiliar;
+bool flag = false;
+bool flag_segunda = false;
+bool flag_tres =false;
+int B = 10;
+int A = -10 ;
+int C;
+int acumulador = 0 ;
+//declaro lo que esta conectado al arduino
+#define LED_VERDE 2
+#define LED_ROJO 3
+
+#define LED_G 4
+#define LED_F 5
+#define LED_A 6
+#define LED_B 7
+#define LED_E 8
+#define LED_D 9
+#define LED_C 10
+
+#define BOTON_UNO 13
+#define BOTON_DOS 12
+#define BOTON_TRES 11
+//vuelvo a declarar todo lo que esta conectado al arduino e informo si
+// es salida o entrada
+void setup()
+{
+  //los led
+    pinMode(LED_VERDE, OUTPUT);
+    pinMode(LED_ROJO, OUTPUT);
+  //el displey 7 segmentos
+    pinMode(LED_A,OUTPUT);
+    pinMode(LED_B,OUTPUT);
+    pinMode(LED_C,OUTPUT);
+    pinMode(LED_D,OUTPUT);
+    pinMode(LED_E,OUTPUT);
+    pinMode(LED_F,OUTPUT);
+    pinMode(LED_G,OUTPUT); 
+  //los botones
+    pinMode(BOTON_UNO, INPUT);
+    pinMode(BOTON_DOS, INPUT);
+    pinMode(BOTON_TRES, INPUT);
+   //activo la funcion para mostrar por consola
+    Serial.begin(9600);
+}
+
+void loop()
+{
+// uso las funciones que quiero que se repitan 
+subir(lectura_uno,BOTON_UNO);
+bajar(lectura_tres,BOTON_TRES);
+  //enciendo la led roja (indicando que  esta apagada)
+prender_led(LED_ROJO);
+
+}
+//creo mi funcion para que el montacargas suba
+void subir(int lectura,int boton)
+{
+  //indico si el boton esta prendido o apagado
+ lectura = digitalRead(boton);
+  if(lectura == 1)
+	 {
+    //en caso de que este prendido guardo una bandera  con true
+  	 flag = true;
+    
+	 }
+
+   	if(flag == true)
+ 	 {
+      //apago la led roja y enciendo la verde (indicando que el montacargas esta en
+      //funcionamiento)
+      apagar_led(LED_ROJO);
+      prender_led(LED_VERDE);
+      //hago un bucle de 10 iteraciones 
+      for(acumulador = auxiliar;acumulador < 10;acumulador ++)
+      {
+         if(acumulador<= 9 && acumulador > 0)
+       {
+           //guardo un auxiliar en caso de que mi acumulador cambie su valor
+         auxiliar = acumulador;
+       }
+        //pregunto si el boton de parar esta prendido
+        parar(lectura_dos,BOTON_DOS,B);
+        // informo del estado del montacargas
+        Serial.println("estas subiendo  y estas en el psio");
+        // informo el  piso en el que se encuentra 
+        Serial.println(acumulador);
+        //pregunto si el boton de parar esta prendido
+          parar(lectura_dos,BOTON_DOS,B);
+        //muestro por el display  en que piso se encuentra
+        piso();
+        delay(1000);
+        //pregunto si el boton de parar esta prendido
+        parar(lectura_dos,BOTON_DOS,B);
+      }
+      // hago que mi bandera se haga false para que no vuelva a repetir el bucle
+      flag = false;
+    }
+ }
+//creo mi funcion para que el montacargas baje
+void bajar(int lectura, int boton)
+{
+  //indico si el boton esta prendido o apagado
+  lectura = digitalRead(boton);
+  if (lectura == 1)
+  {
+     //en caso de que este prendido guardo una bandera  con true
+      //apago la led roja y enciendo la verde (indicando que el montacargas esta en
+      //funcionamiento)
+    flag_tres = true;
+    apagar_led(LED_ROJO);
+    prender_led(LED_VERDE);
+  }
+  if (flag_tres == true)
+  {
+    // en caso que mi acumulador se mayo que 10 hago que se iguale al auxialiar
+    if( acumulador > 10)
+     {
+      acumulador = auxiliar;
+     }
+     //hago un bucle  hasta llegar a 0
+    for (acumulador = auxiliar;acumulador > 0; acumulador--)
+    {
+     //pregunto si el boton de parar esta prendido
+      parar(lectura_dos, BOTON_DOS,A);
+     //muestro por el display  en que piso se encuentra
+      piso();
+      //pregunto si el boton de parar esta prendido
+      parar(lectura_dos, BOTON_DOS,A);
+      // informo del estado del montacargas 
+      Serial.println("esta bajando el montacargas");
+      //pregunto si el boton de parar esta prendido
+      parar(lectura_dos, BOTON_DOS,A);
+      //al llegar a 0 lo informo
+      if (acumulador == 0)
+      {
+         // informo del estado del montacargas
+        Serial.println("llegaste al piso 0");
+      }
+      // hago que mi bandera se haga false para que no vuelva a repetir el bucle
+      flag_tres = false;
+    }
+  }
+}
+//creo mi funcion para parar el montacargas
+void parar(int lectura,int boton,int a)
+{
+   //pregunto si el boton de parar esta prendido
+   lectura = digitalRead(boton);
+  if (lectura == 1)
+  { //en caso de que este prendido guardo una bandera  con true
+    flag_segunda = true;
+  }
+  if(flag_segunda == true)
+  {  //apago la led roja y enciendo la verde (indicando que el montacargas esta en
+      //funcionamiento)
+ apagar_led(LED_VERDE);
+ prender_led(LED_ROJO);
+            //muestro por el display  en que piso se encuentra
+   piso();
+    // hago que el acumulador vcambie su valor para que se rompan los bucles for
+   acumulador = a;
+  // informo del estado del montacargas
+    Serial.println("se paro el montacargas");
+    //hago que mi flag sea false para salir del bucle
+    flag_segunda = false;
+  }
+  
+}
+  //creo ina funcion para para prender ya apagar los display
+void display(int a, int b, int c, int d, int e, int f,int g)
+{
+  //indico que cada display este con  una variable local asi puedo decicido si es 
+  // prendido o apagado
+  
+  digitalWrite(LED_A,a );
+  digitalWrite(LED_B,b);
+  digitalWrite(LED_C,c);
+  digitalWrite(LED_D,d );
+  digitalWrite(LED_E,e );
+  digitalWrite(LED_F,f );
+  digitalWrite(LED_G,g );
+  //coloco un delay para bajar la velocidad
+  delay(3000);
+  //indico que cada display  este apagado
+  digitalWrite(LED_A,LOW );
+  digitalWrite(LED_B,LOW);
+  digitalWrite(LED_C,LOW);
+  digitalWrite(LED_D,LOW );
+  digitalWrite(LED_E,LOW );
+  digitalWrite(LED_F,LOW );
+  digitalWrite(LED_G,LOW );
+  
+  delay(3000);
+}
+//creo una funcion para mostrar segun cada caso especifico 
+void piso()
+{//hago un switch para mostrar casos del 0 al 9
+    switch (acumulador)
+    {
+        case 0:
+      //enciendo las luces especificas para mostrar el numero que quiero
+            display(HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, LOW);
+      //cierro  el case
+            break;
+        case 1:
+        
+            display(LOW, HIGH, HIGH, LOW, LOW, LOW, LOW);
+       
+            break;
+        case 2:
+        
+            display(HIGH, HIGH, LOW, HIGH, HIGH, LOW, HIGH);
+       
+            break;
+        case 3:
+        
+            display(HIGH, HIGH, HIGH, HIGH, LOW, LOW, HIGH);
+       
+            break;
+        case 4:
+       
+            display(LOW, HIGH, HIGH, LOW, LOW, HIGH, HIGH);
+       
+            break;
+        case 5:
+       
+            display(HIGH, LOW, HIGH, HIGH, LOW, HIGH, HIGH);
+     
+            break;
+        case 6:
+     
+            display(HIGH, LOW, HIGH, HIGH, HIGH, HIGH, HIGH);
+
+            break;
+        case 7:
+      
+            display(HIGH, HIGH, HIGH, LOW, LOW, LOW, LOW);
+     
+            break;
+        case 8:
+       
+            display(HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, HIGH);
+
+            break;
+        case 9:
+        
+            display(HIGH, HIGH, HIGH, HIGH, LOW, HIGH, HIGH);
+ 
+            break;
+    }
+}//hago funciones  para prender
+void prender_led(int led)
+{//enciendo el led
+   digitalWrite(led, HIGH);
+}
+//ago funciones para apagar
+void apagar_led(int led)
+{//apago el led
+   digitalWrite(led, LOW);
+}
+
