@@ -25,6 +25,9 @@ int acumulador = 0 ;
 #define BOTON_UNO 13
 #define BOTON_DOS 12
 #define BOTON_TRES 11
+
+
+
 //vuelvo a declarar todo lo que esta conectado al arduino e informo si
 // es salida o entrada
 void setup()
@@ -54,7 +57,7 @@ void loop()
 subir(lectura_uno,BOTON_UNO);
 bajar(lectura_tres,BOTON_TRES);
   //enciendo la led roja (indicando que  esta apagada)
-prender_led(LED_ROJO);
+	prender_led(LED_ROJO);
 
 }
 //creo mi funcion para que el montacargas suba
@@ -74,7 +77,7 @@ void subir(int lectura,int boton)
       //apago la led roja y enciendo la verde (indicando que el montacargas esta en
       //funcionamiento)
       apagar_led(LED_ROJO);
-      prender_led(LED_VERDE);
+    	  prender_led(LED_VERDE);
       //hago un bucle de 10 iteraciones 
       for(acumulador = auxiliar;acumulador < 10;acumulador ++)
       {
@@ -113,7 +116,7 @@ void bajar(int lectura, int boton)
       //funcionamiento)
     flag_tres = true;
     apagar_led(LED_ROJO);
-    prender_led(LED_VERDE);
+ 	   prender_led(LED_VERDE);
   }
   if (flag_tres == true)
   {
@@ -159,7 +162,7 @@ void parar(int lectura,int boton,int a)
   {  //apago la led roja y enciendo la verde (indicando que el montacargas esta en
       //funcionamiento)
  apagar_led(LED_VERDE);
- prender_led(LED_ROJO);
+	 prender_led(LED_ROJO);
             //muestro por el display  en que piso se encuentra
    piso();
     // hago que el acumulador vcambie su valor para que se rompan los bucles for
@@ -253,14 +256,17 @@ void piso()
  
             break;
     }
-}//hago funciones  para prender
+}
+
+
 void prender_led(int led)
 {//enciendo el led
    digitalWrite(led, HIGH);
 }
-//ago funciones para apagar
-void apagar_led(int led)
+  void apagar_led(int led)
 {//apago el led
    digitalWrite(led, LOW);
 }
+
+
 
