@@ -128,7 +128,9 @@ void bajar(int lectura, int boton)
 
 
 
+# Posibles errores
 
+Por la forma en la que  se programo el montacargas  no detecta de forma correcta al precionar el boton  parar , en caso de q no se detecte  se debve mantener apretado  hasta que pare
 
 
 
